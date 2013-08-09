@@ -3,7 +3,7 @@
 
 # Make for nominal portability to PostGIS
 ofmt="-f SQLite"
-basepath=~/Desktop/CycleTracks/data
+basepath=~/Desktop/ct-postproc/data
 orig=$basepath/original
 opath=$basepath/cycletracks.sqlite
 flags="-t_srs EPSG:4326 -dsco SPATIALITE=YES -gt 65536"
@@ -64,3 +64,7 @@ $append -nln truck_counts
 # Truck freight functional classification crap
 ogr2ogr $ofmt $opath $orig/FGTSWA.gdb \
 $append -nln freight_classification
+
+# Manufacturing and Industrial Centers
+ogr2ogr $ofmt $opath $orig/mic/micen_fixed.sqlite \
+$append -nln manufacturing_centers
