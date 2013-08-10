@@ -18,10 +18,6 @@ trucks <- dbGetQuery(con, "select trucks, tonnage, functionalclass, transrefedge
                                and
                                truck_counts.inode = transrefedges.jnode)") 
 
-# Intersect our MIC layer with transrefedges. Note that this cannot be done in my
-# environment due to a crash when I try to load the spatial extensions.
-# So this was created externally in spatialite_gui
-
 mic_intersect <- dbGetQuery(con, "SELECT inode, jnode, 1 inmic
   FROM transrefedges, manufacturing_centers
   WHERE intersects(manufacturing_centers.GEOMETRY, transrefedges.GEOMETRY)
