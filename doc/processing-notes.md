@@ -6,7 +6,8 @@ Use WSDOT FGTSWA data (FGTSclass attribute) to predict the truck
 counts observed in our trucks_counts layer. If this doesn't totally
 suck, then we make up numbers for remainder of network.
 
-Best bet: join i,j in truck counts table to i,j and j,i in edges table, run regression.
+Best bet: join i,j in truck counts table to i,j and j,i in edges
+table, run regression.
 
 recode NULL tonnage as 4
 counts ~ tonnage

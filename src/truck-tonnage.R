@@ -1,9 +1,13 @@
-# install.packages(c("RSQLite", "car"), type="source")
-library(RSQLite)
+# Library installation was a little tricky
+# install.packages(c("RSQLite", "rgdal", "car", "devtools"))
+# library(devtools)
+# install_github(repo="RSQLite.spatialite", username="pschmied")
+library(RSQLite.spatialite)
 library(car)
+
 sqldrv <- dbDriver("SQLite")
-con <- dbConnect(sqldrv, dbname = "~/Desktop/ct-postproc/data/working.sqlite", loadable.extensions=T)
-# spatialitestatus <- dbGetQuery(con, "SELECT load_extension('libspatialite.5')")
+con <- dbConnect(sqldrv, dbname = "~/Desktop/ct-postproc/data/working.sqlite")
+init_spatialite(con)
 trucks <- dbGetQuery(con, "select trucks, tonnage, functionalclass, transrefedges.inode, transrefedges.jnode
                                from truck_counts
                                join transrefedges on
@@ -18,14 +22,13 @@ trucks <- dbGetQuery(con, "select trucks, tonnage, functionalclass, transrefedge
 # environment due to a crash when I try to load the spatial extensions.
 # So this was created externally in spatialite_gui
 
-# CREATE TABLE edges_intersect_mic AS
-# SELECT inode, jnode, 1 inmic
-# FROM transrefedges, manufacturing_centers
-# WHERE intersects(manufacturing_centers.GEOMETRY, transrefedges.GEOMETRY)
-# AND transrefedges.ROWID IN
-# (SELECT ROWID FROM SpatialIndex WHERE f_table_name="transrefedges" AND search_frame=manufacturing_centers.GEOMETRY);
-
-mic_intersect <- dbGetQuery(con, "SELECT * from edges_intersect_mic")
+mic_intersect <- dbGetQuery(con, "SELECT inode, jnode, 1 inmic
+  FROM transrefedges, manufacturing_centers
+  WHERE intersects(manufacturing_centers.GEOMETRY, transrefedges.GEOMETRY)
+  AND transrefedges.ROWID IN
+    (SELECT ROWID FROM SpatialIndex
+    WHERE f_table_name='transrefedges'
+    AND search_frame=manufacturing_centers.GEOMETRY);")
 
 # Easier to do this in R
 trucks <- merge(x=trucks, y=mic_intersect, by=c("inode", "jnode"), all.x=TRUE)
