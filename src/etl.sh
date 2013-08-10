@@ -28,6 +28,10 @@ spatialite $opath \
 spatialite $opath \
 "UPDATE traces SET Geometry=MakePoint(longitude,latitude, 4326);"
 
+# CycleTracks Trips (fake SRS again)
+ogr2ogr $ofmt $opath \
+$orig/cycletracks/trips.csv $append -s_srs EPSG:4326
+
 # Grocery stores
 ogr2ogr $ofmt $opath \
 $orig/grocery/Snohomish_major_stores_clean_1_w_PIN_and_SF_FINAL.shp \
