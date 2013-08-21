@@ -24,13 +24,21 @@ $append -nln collisions -skipfailures
 echo "bike facilities"
 ogr2ogr $ofmt $opath $orig/bikefacility/bikefacilities.gdb $append
 
-# CycleTracks Traces
+# CycleTracks Traces. This is a little tricker. We create a virtual
+# OGR layer in order to project WGS84 lat/lon on the fly.
+vrtrace=$basepath/traces.vrt
 echo "traces"
-ogr2ogr $ofmt $opath $orig/cycletracks/traces.csv $append -s_srs EPSG:3857
-spatialite $opath \
-"SELECT AddGeometryColumn('traces','Geometry',3857,'POINT',2)"
-spatialite $opath \
-"UPDATE traces SET Geometry=MakePoint(longitude,latitude, 3857);"
+echo "<OGRVRTDataSource>
+    <OGRVRTLayer name='traces'>
+        <SrcDataSource>$orig/cycletracks/traces.csv</SrcDataSource>
+        <GeometryType>wkbPoint</GeometryType>
+        <LayerSRS>WGS84</LayerSRS>
+        <GeometryField encoding='PointFromColumns' x='Longitude' y='Latitude'/>
+    </OGRVRTLayer>
+</OGRVRTDataSource>" > $vrtrace
+
+ogr2ogr $ofmt $opath $vrtrace $append
+rm $vrtrace
 
 # CycleTracks Trips (fake SRS again)
 echo "trips"
@@ -76,10 +84,10 @@ echo "truck volumes"
 ogr2ogr $ofmt $opath $orig/Truck_Volumes/combined_classification_counts.shp \
 $append -nln truck_counts
 
-# Truck freight functional classification crap
-echo "truck freight functional classification"
-ogr2ogr $ofmt $opath $orig/FGTSWA.gdb \
-$append -nln freight_classification
+# Truck freight functional classification (perhaps not using)
+#echo "truck freight functional classification"
+#ogr2ogr $ofmt $opath $orig/FGTSWA.gdb \
+#$append -nln freight_classification
 
 # Manufacturing and Industrial Centers
 echo "manufacturing centers"
