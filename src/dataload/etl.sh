@@ -15,11 +15,6 @@ rm $opath
 echo "psrc network"
 ogr2ogr $ofmt $opath $orig/PSRC_Net.gdb $flags
 
-# Collisions
-echo "collisions"
-ogr2ogr $ofmt $opath $orig/CollisionsData/Merged/Collisions_Merged.shp \
-$append -nln collisions -skipfailures
-
 # Bicycle facilities - FAILS (need to bring up to speed in ArcCatalog)
 echo "bike facilities"
 ogr2ogr $ofmt $opath $orig/bikefacility/bikefacilities.gdb $append
@@ -45,17 +40,6 @@ echo "trips"
 ogr2ogr $ofmt $opath \
 $orig/cycletracks/trips.csv $append -s_srs EPSG:3857
 
-# Grocery stores
-echo "groceries"
-ogr2ogr $ofmt $opath \
-$orig/grocery/Snohomish_major_stores_clean_1_w_PIN_and_SF_FINAL.shp \
-$append -nln grocery_snohomish
-
-ogr2ogr $ofmt $opath $orig/grocery/KITSAP_FINAL_COMPLETE_20090401.shp \
-$append -nln grocery_kitsap
-
-ogr2ogr $ofmt $opath $orig/grocery/grocery_stores_20090311.shp \
-$append -nln grocery_king
 
 # Mode attributes - table only, fake input srs
 echo "mode attributes"
@@ -78,18 +62,3 @@ $append -nln elevation_edges
 echo "parcels"
 ogr2ogr $ofmt $opath $orig/parcel/prcl05/prcl05.shp \
 $append -skipfailures -nln parcels_2005
-
-# Truck volumes - waiting on Alon's guidance
-echo "truck volumes"
-ogr2ogr $ofmt $opath $orig/Truck_Volumes/combined_classification_counts.shp \
-$append -nln truck_counts
-
-# Truck freight functional classification (perhaps not using)
-#echo "truck freight functional classification"
-#ogr2ogr $ofmt $opath $orig/FGTSWA.gdb \
-#$append -nln freight_classification
-
-# Manufacturing and Industrial Centers
-echo "manufacturing centers"
-ogr2ogr $ofmt $opath $orig/mic/micen_fixed.sqlite \
-$append -nln manufacturing_centers
