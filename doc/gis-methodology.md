@@ -10,25 +10,25 @@ variables.
 Per Alon's email dated 11 September, we will consider the following
 varables:
 
-| Variable                              | Unit  |
-|---------------------------------------+-------|
-| Travel Time                           | min   |
-| Travel Distance                       | km    |
-| Travel Speed                          | m/s   |
-| Trip Frequency                        | cat   |
-| Age                                   | yr    |
-| Gender                                | cat   |
-| # Intersections                       | n     |
-| # Left Turns                          | n     |
-| # Right Turns                         | n     |
-| Share of trip up-slope                | ratio |
-| Mean Up-Slope                         | ???   |
-| Max Up-Slope                          | ???   |
-| Share of trip on bike facility        | ratio |
-| Land-use mix (corridor)               | index |
-| Origin dist. to closest facility      | km    |
-| Dest. dist. to closest facility       | km    |
-| Share of trip along commercial parcel | ratio |
+| Variable                              | Unit     |
+|---------------------------------------+----------|
+| Travel Time                           | min      |
+| Travel Distance                       | km       |
+| Travel Speed                          | m/s      |
+| Trip Frequency                        | cat      |
+| Age                                   | yr       |
+| Gender                                | cat      |
+| # Intersections                       | n        |
+| # Left Turns                          | n        |
+| # Right Turns                         | n        |
+| Share of trip up-slope                | ratio    |
+| Mean Up-Slope                         | rise/run |
+| Max Up-Slope                          | rise/run |
+| Share of trip on bike facility        | ratio    |
+| Land-use mix (corridor)               | index    |
+| Origin dist. to closest facility      | km       |
+| Dest. dist. to closest facility       | km       |
+| Share of trip along commercial parcel | ratio    |
 
 
 
@@ -61,16 +61,16 @@ consideration in our analysis:
 1. Minimum bounding rectangle of less than 1024m^2. This threshold is
    somewhat arbitrary but covers the case where a user aborted logging
    early, but still uploaded the trip.
-2. ??? or more GPS points exceed ??? m/s, indicating that the user
+2. 10 or more GPS points exceed 15.65 m/s, indicating that the user
    spent some portion of his trip traveling by a motorized,
-   non-bicycle mode. ??? points is an arbitrary threshold, however
-   seems to be sufficiently high as to tolerate some incorrect data, but is
-   sufficiently low as to bursts of speed deemed impossible for
-   bicyclists to achieve.
-3. Fewer than ??? GPS points exceeding ??? m/s. Trips in which the
-   user did not, at any time, achieve a speed greater than ??? were
+   non-bicycle mode. 10 points is an arbitrary threshold, however
+   seems to be sufficiently high as to tolerate some incorrect data,
+   but is sufficiently low as to exclude trips with bursts of speed
+   deemed impossible for bicyclists to achieve.
+3. Fewer than 20 GPS points exceeding 4.5 m/s. Trips in which the
+   user did not, at any time, achieve a speed greater than 4.5 m/s were
    deemed most likely to be a non-bicycling trip.
-4. Trips in which the time between recording GPS points exceeded ???
+4. Trips in which the time between recording GPS points exceeded 1
    minutes. Many such trips exist, believed to be the result of iPhone
    users pausing the logging function on their phone in error. These
    traces are unusable because there are significant gaps in the
