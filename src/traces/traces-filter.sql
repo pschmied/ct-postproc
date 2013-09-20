@@ -2,6 +2,8 @@
 DROP VIEW traces_filter_mbr;
 DROP VIEW traces_filter_hi_speed;
 DROP VIEW traces_filter_lo_speed;
+DROP VIEW traces_filter_gaps;
+
 DROP TABLE traces_bad;
 
 -- -- Remove the spatial views that have already been registered
@@ -20,13 +22,13 @@ FROM traces
 GROUP BY trip_id;
 
 CREATE VIEW traces_filter_hi_speed AS
-SELECT trip_id, count(trip_id) > 10 as excess_speed
+SELECT trip_id, count(trip_id) > 10 AS excess_speed
 FROM traces
 WHERE speed > 15.65
 GROUP BY trip_id;
 
 CREATE VIEW traces_filter_lo_speed AS
-SELECT trip_id, count(trip_id) < 20 as insufficient_speed
+SELECT trip_id, count(trip_id) < 20 AS insufficient_speed
 FROM traces
 WHERE speed > 4.5
 GROUP BY trip_id;
@@ -36,9 +38,9 @@ SELECT DISTINCT trip_id,
 (SELECT strftime('%s', b.recorded)
      FROM traces b
      WHERE b.OGC_FID = a.OGC_FID + 1
-     AND a.trip_id = b.trip_id) - strftime('%s', a.recorded) > 60 gap
+     AND a.trip_id = b.trip_id) - strftime('%s', a.recorded) > 60 gaps
 FROM traces a
-WHERE gap = 1
+WHERE gaps = 1;
 
 
 
@@ -46,19 +48,19 @@ WHERE gap = 1
 CREATE TABLE traces_bad AS
 SELECT a.rowid AS rowid, a.Geometry AS Geometry,
     a.trip_id AS trip_id,
-    b.mbr_lt_1024 as mbr_lt_1024,
-    c.excess_speed as excess_speed,
-    d.insufficient_speed as insufficient_speed
-    e.gaps as gaps
+    b.mbr_lt_1024 AS mbr_lt_1024,
+    c.excess_speed AS excess_speed,
+    d.insufficient_speed AS insufficient_speed,
+    e.gaps AS gaps
 FROM traces AS a
 LEFT JOIN traces_filter_mbr AS b USING (trip_id)
-LEFT JOIN traces_filter_hi_speed as c USING (trip_id)
-LEFT JOIN traces_filter_lo_speed as d USING (trip_id)
-LEFT JOIN traces_filter_gaps as e USING (trip_id)
+LEFT JOIN traces_filter_hi_speed AS c USING (trip_id)
+LEFT JOIN traces_filter_lo_speed AS d USING (trip_id)
+LEFT JOIN traces_filter_gaps AS e USING (trip_id)
 WHERE b.mbr_lt_1024 = 1
 OR c.excess_speed = 1
 OR d.insufficient_speed = 1
-OR e.gap = 1;
+OR e.gaps = 1;
 
 SELECT RecoverGeometryColumn('traces_bad', 'Geometry', 3857,
 'POINT',2);
