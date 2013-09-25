@@ -17,7 +17,11 @@ ogr2ogr $ofmt $opath $orig/PSRC_Net.gdb $flags
 
 # Bicycle facilities - FAILS (need to bring up to speed in ArcCatalog)
 echo "bike facilities"
-ogr2ogr $ofmt $opath $orig/bikefacility/bikefacilities.gdb $append
+ogr2ogr $ofmt $opath $orig/bikefacility/bikefacilities.gdb \
+transrefedges_bikefacil -nln bike_transrefedges $append
+
+ogr2ogr $ofmt $opath $orig/bikefacility/bikefacilities.gdb \
+transrefjunctions -nln bike_transrefjunctions $append
 
 # CycleTracks Traces. This is a little tricker. We create a virtual
 # OGR layer in order to project WGS84 lat/lon on the fly.

@@ -78,4 +78,7 @@ consideration in our analysis:
 
 ## Handling outlier GPS points / noise
 
+Proceeding on the basis that our snapping method is naturally tolerant
+of noise.
+
 ## Converting GPS traces to network routes
