@@ -6,7 +6,7 @@ ofmt="-f SQLite"
 basepath=~/Desktop/ct-postproc/data
 orig=$basepath/original
 opath=$basepath/cycletracks.sqlite
-flags="-t_srs EPSG:3857 -a_srs EPSG:3857 -dsco SPATIALITE=YES -gt 65536"
+flags="-t_srs EPSG:3857 -a_srs EPSG:3857 -dsco SPATIALITE=YES -gt 65536 -nlt PROMOTE_TO_MULTI"
 append=$flags" -append -update"
 
 rm $opath
