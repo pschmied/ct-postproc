@@ -44,7 +44,8 @@ WHERE gaps = 1;
 
 
 
--- Create a view containing all the misfit links
+-- Create a table containing all the misfit links for inspection
+-- purposes (i.e. weed out false positives)
 CREATE TABLE traces_bad AS
 SELECT a.rowid AS rowid, a.Geometry AS Geometry,
     a.trip_id AS trip_id,
@@ -64,9 +65,3 @@ OR e.gaps = 1;
 
 SELECT RecoverGeometryColumn('traces_bad', 'Geometry', 3857,
 'POINT',2);
-
--- -- Register the view containing misfit links
--- INSERT INTO views_geometry_columns
---     (view_name, view_geometry, view_rowid, f_table_name,
---     f_geometry_column, read_only)
---   VALUES ('traces_bad', 'geometry', 'rowid', 'traces', 'geometry', 1);
